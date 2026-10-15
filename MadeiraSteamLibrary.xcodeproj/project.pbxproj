@@ -25,6 +25,7 @@ B00000000000000000000019 /* SteamSession.swift in Sources */ = {isa = PBXBuildFi
 B00000000000000000000020 /* SteamAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000020; };
 B00000000000000000000021 /* SteamLibraryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000021; };
 B00000000000000000000022 /* LicenseListBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000022; };
+B00000000000000000000023 /* SteamFileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000023; };
 /* End PBXBuildFile section */
 /* Begin PBXFileReference section */
 F00000000000000000000001 /* MadeiraSteamLibraryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MadeiraSteamLibraryApp.swift; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@ F00000000000000000000019 /* SteamSession.swift */ = {isa = PBXFileReference; las
 F00000000000000000000020 /* SteamAppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamAppInfo.swift; sourceTree = "<group>"; };
 F00000000000000000000021 /* SteamLibraryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamLibraryFetcher.swift; sourceTree = "<group>"; };
 F00000000000000000000022 /* LicenseListBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseListBox.swift; sourceTree = "<group>"; };
+F00000000000000000000023 /* SteamFileError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamFileError.swift; sourceTree = "<group>"; };
 F00000000000000000000099 /* MadeiraSteamLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MadeiraSteamLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 /* Begin PBXGroup section */
@@ -60,7 +62,7 @@ G00000000000000000000006 /* Core */ = {isa = PBXGroup; path = Core; sourceTree =
 G00000000000000000000007 /* Helpers */ = {isa = PBXGroup; path = Helpers; sourceTree = "<group>"; children = (F00000000000000000000010, F00000000000000000000011,); };
 G00000000000000000000008 /* Proto */ = {isa = PBXGroup; path = Proto; sourceTree = "<group>"; children = (F00000000000000000000012,); };
 G00000000000000000000009 /* SteamCore */ = {isa = PBXGroup; path = SteamCore; sourceTree = "<group>"; children = (F00000000000000000000013, G00000000000000000000010, G00000000000000000000011,); };
-G00000000000000000000010 /* SteamCore/Core */ = {isa = PBXGroup; path = Core; sourceTree = "<group>"; children = (F00000000000000000000014, F00000000000000000000015, F00000000000000000000016, F00000000000000000000017, F00000000000000000000018, F00000000000000000000019, F00000000000000000000022,); };
+G00000000000000000000010 /* SteamCore/Core */ = {isa = PBXGroup; path = Core; sourceTree = "<group>"; children = (F00000000000000000000014, F00000000000000000000015, F00000000000000000000016, F00000000000000000000017, F00000000000000000000018, F00000000000000000000019, F00000000000000000000022, F00000000000000000000023,); };
 G00000000000000000000011 /* SteamCore/Library */ = {isa = PBXGroup; path = Library; sourceTree = "<group>"; children = (F00000000000000000000020, F00000000000000000000021,); };
 G00000000000000000000003 /* Products */ = {isa = PBXGroup; name = Products; children = (F00000000000000000000099,); sourceTree = "<group>"; };
 /* End PBXGroup section */
@@ -71,7 +73,7 @@ T00000000000000000000001 /* MadeiraSteamLibrary */ = {isa = PBXNativeTarget; bui
 P00000000000000000000001 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastUpgradeCheck = 1600; TargetAttributes = {T00000000000000000000001 = {CreatedOnToolsVersion = 16.0;};};}; buildConfigurationList = L00000000000000000000001; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = G00000000000000000000001; productRefGroup = G00000000000000000000003; projectDirPath = ""; projectRoot = ""; targets = (T00000000000000000000001,); };
 /* End PBXProject section */
 /* Begin PBXSourcesBuildPhase section */
-S00000000000000000000001 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B00000000000000000000001, B00000000000000000000002, B00000000000000000000003, B00000000000000000000004, B00000000000000000000005, B00000000000000000000006, B00000000000000000000007, B00000000000000000000008, B00000000000000000000009, B00000000000000000000010, B00000000000000000000011, B00000000000000000000012, B00000000000000000000013, B00000000000000000000014, B00000000000000000000015, B00000000000000000000016, B00000000000000000000017, B00000000000000000000018, B00000000000000000000019, B00000000000000000000020, B00000000000000000000021, B00000000000000000000022,); runOnlyForDeploymentPostprocessing = 0; };
+S00000000000000000000001 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B00000000000000000000001, B00000000000000000000002, B00000000000000000000003, B00000000000000000000004, B00000000000000000000005, B00000000000000000000006, B00000000000000000000007, B00000000000000000000008, B00000000000000000000009, B00000000000000000000010, B00000000000000000000011, B00000000000000000000012, B00000000000000000000013, B00000000000000000000014, B00000000000000000000015, B00000000000000000000016, B00000000000000000000017, B00000000000000000000018, B00000000000000000000019, B00000000000000000000020, B00000000000000000000021, B00000000000000000000022, B00000000000000000000023,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 /* Begin PBXResourcesBuildPhase section */
 R00000000000000000000001 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
