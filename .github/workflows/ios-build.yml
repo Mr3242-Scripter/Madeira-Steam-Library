@@ -1,0 +1,19 @@
+name: iOS build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Import selected Madeira Steam sign-in files
+        run: sh scripts/import-madeira-steam-signin.sh
+      - name: Build iOS simulator target
+        run: xcodebuild -project MadeiraSteamLibrary.xcodeproj -scheme MadeiraSteamLibrary -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
