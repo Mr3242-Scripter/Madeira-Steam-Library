@@ -22,7 +22,29 @@ fetch "Auth/SteamQRAuth.swift" "Auth/SteamQRAuth.swift"
 fetch "Auth/SteamTokenStore.swift" "Auth/SteamTokenStore.swift"
 fetch "Core/SteamError.swift" "Core/SteamError.swift"
 fetch "Helpers/SteamDevice.swift" "Helpers/SteamDevice.swift"
-fetch "Helpers/SteamLog.swift" "Helpers/SteamLog.swift"
 fetch "Proto/SteamProtoMessages.swift" "Proto/SteamProtoMessages.swift"
+
+# Madeira's helper logs through its app-specific LogStore. This standalone app
+# uses OSLog instead; messages are hashed before they enter the system log.
+cat > "$DEST/Helpers/SteamLog.swift" <<'SWIFT'
+import Foundation
+import OSLog
+
+enum SteamLog {
+    private static let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "com.mr3242scripter.MadeiraSteamLibrary",
+        category: "Steam"
+    )
+
+    static func event(_ message: String) {
+        logger.info("\(message, privacy: .private(mask: .hash))")
+    }
+
+    static func trace(_ message: String) {
+        logger.debug("\(message, privacy: .private(mask: .hash))")
+    }
+}
+SWIFT
+
 echo "Imported selected Madeira sign-in files into $DEST"
 echo "Add these files to your iOS target in Xcode and review upstream licensing."
