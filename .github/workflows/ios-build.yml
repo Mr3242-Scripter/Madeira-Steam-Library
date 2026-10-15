@@ -1,19 +1,112 @@
-name: iOS build
+name: iOS build and nightly release
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "30 2 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    name: Build iOS device and simulator
     runs-on: macos-15
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Prepare build directory
+        run: mkdir -p build
+
       - name: Import selected Madeira Steam sign-in files
         run: sh scripts/import-madeira-steam-signin.sh
-      - name: Build iOS simulator target
-        run: xcodebuild -project MadeiraSteamLibrary.xcodeproj -scheme MadeiraSteamLibrary -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO build
+
+      - name: Build iOS device app
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project MadeiraSteamLibrary.xcodeproj \
+            -scheme MadeiraSteamLibrary \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            -derivedDataPath build/device-derived \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build/ios-device-build.log
+
+      - name: Package unsigned IPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="build/device-derived/Build/Products/Release-iphoneos/MadeiraSteamLibrary.app"
+          test -d "$APP"
+          mkdir -p build/ipa/Payload
+          cp -R "$APP" build/ipa/Payload/
+          (cd build/ipa && /usr/bin/zip -qr ../MadeiraSteamLibrary.ipa Payload)
+          test -s build/MadeiraSteamLibrary.ipa
+
+      - name: Build iOS Simulator app
+        shell: bash
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project MadeiraSteamLibrary.xcodeproj \
+            -scheme MadeiraSteamLibrary \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Release \
+            -derivedDataPath build/simulator-derived \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build/ios-simulator-build.log
+
+      - name: Package simulator app
+        run: |
+          APP="build/simulator-derived/Build/Products/Release-iphonesimulator/MadeiraSteamLibrary.app"
+          test -d "$APP"
+          ditto -c -k --sequesterRsrc --keepParent "$APP" build/MadeiraSteamLibrary-Simulator.zip
+
+      - name: Upload build outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: MadeiraSteamLibrary-build-${{ github.run_number }}
+          path: |
+            build/MadeiraSteamLibrary.ipa
+            build/MadeiraSteamLibrary-Simulator.zip
+            build/ios-device-build.log
+            build/ios-simulator-build.log
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish or update nightly release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nightly
+          name: "Madeira Steam Library Nightly #${{ github.run_number }}"
+          target_commitish: ${{ github.sha }}
+          prerelease: true
+          make_latest: false
+          fail_on_unmatched_files: true
+          body: |
+            Automated nightly build of Madeira-Steam-Library.
+
+            **Commit:** ${{ github.sha }}
+            **Trigger:** ${{ github.event_name }}
+
+            Included files:
+            - Unsigned iOS device IPA (must be signed by a sideloading tool before installation)
+            - iOS Simulator app ZIP (testing only)
+            - Device and simulator build logs
+          files: |
+            build/MadeiraSteamLibrary.ipa
+            build/MadeiraSteamLibrary-Simulator.zip
+            build/ios-device-build.log
+            build/ios-simulator-build.log
