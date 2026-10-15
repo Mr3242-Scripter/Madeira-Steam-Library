@@ -14,14 +14,53 @@ struct ContentView: View {
 }
 
 private struct LibraryView: View {
+    @StateObject private var library = SteamOwnedGamesService.shared
+
     var body: some View {
         NavigationStack {
-            ContentUnavailableView(
-                "Steam Library",
-                systemImage: "gamecontroller",
-                description: Text("The owned-game browser is not connected yet. Sign in under Settings while library integration is being built.")
-            )
-            .navigationTitle("Library")
+            Group {
+                if library.isLoading && library.games.isEmpty {
+                    ProgressView("Loading owned Steam games…")
+                } else if let error = library.error, library.games.isEmpty {
+                    ContentUnavailableView("Steam Library", systemImage: "gamecontroller",
+                        description: Text(error))
+                } else if library.games.isEmpty {
+                    ContentUnavailableView("No games loaded", systemImage: "gamecontroller",
+                        description: Text("Sign in to Steam, then tap Refresh."))
+                } else {
+                    List(library.games) { game in
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(game.name).font(.headline)
+                            Text("App ID: \(game.id)")
+                                .font(.caption).foregroundStyle(.secondary)
+                            if game.estimatedDownloadBytes > 0 {
+                                Text("Approx. download: \(ByteCountFormatter.string(fromByteCount: Int64(clamping: game.estimatedDownloadBytes), countStyle: .file))")
+                                    .font(.caption).foregroundStyle(.secondary)
+                            }
+                            Text("Madeira-compatible download integration is still in progress.")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
+            .navigationTitle("Steam Library")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task { await library.refresh() }
+                    } label: {
+                        if library.isLoading { ProgressView() }
+                        else { Label("Refresh", systemImage: "arrow.clockwise") }
+                    }
+                    .disabled(library.isLoading)
+                }
+            }
+            .task {
+                if library.games.isEmpty && !library.isLoading {
+                    await library.refresh()
+                }
+            }
         }
     }
 }
@@ -40,9 +79,7 @@ private struct SteamSettingsView: View {
                     if model.signedIn {
                         Label(model.accountName ?? "Signed in", systemImage: "checkmark.circle.fill")
                             .foregroundStyle(.green)
-                        Button("Sign out", role: .destructive) {
-                            model.signOut()
-                        }
+                        Button("Sign out", role: .destructive) { model.signOut() }
                     } else {
                         Picker("Sign-in method", selection: $useQR) {
                             Text("Password").tag(false)
@@ -51,17 +88,12 @@ private struct SteamSettingsView: View {
                         .pickerStyle(.segmented)
 
                         if useQR {
-                            Button {
-                                model.beginQR()
-                            } label: {
+                            Button { model.beginQR() } label: {
                                 Label("Start QR sign-in", systemImage: "qrcode")
                             }
                             if let image = model.qrImage {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .interpolation(.none)
-                                    .scaledToFit()
-                                    .frame(maxWidth: 240, maxHeight: 240)
+                                Image(uiImage: image).resizable().interpolation(.none)
+                                    .scaledToFit().frame(maxWidth: 240, maxHeight: 240)
                                     .frame(maxWidth: .infinity)
                             }
                             if let link = model.qrLink {
@@ -71,8 +103,7 @@ private struct SteamSettingsView: View {
                             }
                         } else {
                             TextField("Steam account name", text: $account)
-                                .textInputAutocapitalization(.never)
-                                .autocorrectionDisabled()
+                                .textInputAutocapitalization(.never).autocorrectionDisabled()
                             SecureField("Password", text: $password)
                             Button("Sign in") {
                                 let submitted = password
@@ -92,23 +123,17 @@ private struct SteamSettingsView: View {
                             }
                             .disabled(guardCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || model.signInBusy)
                         }
-                        if model.signInBusy {
-                            ProgressView("Connecting to Steam…")
-                        }
+                        if model.signInBusy { ProgressView("Connecting to Steam…") }
                         if let error = model.signInError {
-                            Text(error)
-                                .foregroundStyle(.red)
-                                .font(.footnote)
+                            Text(error).foregroundStyle(.red).font(.footnote)
                         }
                     }
                 }
-
                 Section("Security") {
                     LabeledContent("Sign-in", value: "Madeira implementation")
                     LabeledContent("Token storage", value: "iOS Keychain")
-                    Text("The owned-game browser and Madeira-compatible downloads are not connected yet.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    Text("Downloads are not enabled until the Madeira-compatible installer is integrated.")
+                        .font(.footnote).foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("Settings")
