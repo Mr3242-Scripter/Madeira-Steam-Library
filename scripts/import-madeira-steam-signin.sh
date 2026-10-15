@@ -1,12 +1,14 @@
 #!/bin/sh
 set -eu
-# Imports only sign-in source files. Does not clone/copy the full Madeira repo.
+# Selectively imports only Steam sign-in and owned-library source files.
+# This does not clone or copy the full Madeira repository.
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-DEST="$ROOT/App/SteamSignIn"
+APP="$ROOT/App"
 BASE="https://raw.githubusercontent.com/willfaust/Madeira/main/app/Madeira/SwiftSteam"
-mkdir -p "$DEST/Auth" "$DEST/Core" "$DEST/Helpers" "$DEST/Proto"
+mkdir -p "$APP/SteamSignIn/Auth" "$APP/SteamSignIn/Core" "$APP/SteamSignIn/Helpers" "$APP/SteamSignIn/Proto"
+mkdir -p "$APP/SteamCore/Core" "$APP/SteamCore/Library"
 fetch() {
-  source_path="$1"; target_path="$2"; target="$DEST/$target_path"
+  source_path="$1"; target_path="$2"; target="$APP/$target_path"
   mkdir -p "$(dirname "$target")"
   echo "Fetching $source_path"
   curl --fail --location --silent --show-error "$BASE/$source_path" -o "$target"
@@ -15,18 +17,29 @@ fetch() {
     rm -f "$target"; exit 1
   fi
 }
-fetch "SteamSignIn.swift" "SteamSignIn.swift"
-fetch "Auth/SteamAuthAPI.swift" "Auth/SteamAuthAPI.swift"
-fetch "Auth/SteamCredentialAuth.swift" "Auth/SteamCredentialAuth.swift"
-fetch "Auth/SteamQRAuth.swift" "Auth/SteamQRAuth.swift"
-fetch "Auth/SteamTokenStore.swift" "Auth/SteamTokenStore.swift"
-fetch "Core/SteamError.swift" "Core/SteamError.swift"
-fetch "Helpers/SteamDevice.swift" "Helpers/SteamDevice.swift"
-fetch "Proto/SteamProtoMessages.swift" "Proto/SteamProtoMessages.swift"
+# Existing Madeira sign-in flow: password, Steam Guard, QR and device-only Keychain.
+fetch "SteamSignIn.swift" "SteamSignIn/SteamSignIn.swift"
+fetch "Auth/SteamAuthAPI.swift" "SteamSignIn/Auth/SteamAuthAPI.swift"
+fetch "Auth/SteamCredentialAuth.swift" "SteamSignIn/Auth/SteamCredentialAuth.swift"
+fetch "Auth/SteamQRAuth.swift" "SteamSignIn/Auth/SteamQRAuth.swift"
+fetch "Auth/SteamTokenStore.swift" "SteamSignIn/Auth/SteamTokenStore.swift"
+fetch "Core/SteamError.swift" "SteamSignIn/Core/SteamError.swift"
+fetch "Helpers/SteamDevice.swift" "SteamSignIn/Helpers/SteamDevice.swift"
+fetch "Proto/SteamProtoMessages.swift" "SteamSignIn/Proto/SteamProtoMessages.swift"
 
-# Madeira's helper logs through its app-specific LogStore. This standalone app
-# uses OSLog instead; messages are hashed before they enter the system log.
-cat > "$DEST/Helpers/SteamLog.swift" <<'SWIFT'
+# Owned library protocol/PICS subset only; no Dock, emulator, game launch or cloud code.
+fetch "Core/CMServerList.swift" "SteamCore/Core/CMServerList.swift"
+fetch "Core/SteamConnection.swift" "SteamCore/Core/SteamConnection.swift"
+fetch "Core/SteamMessageCodec.swift" "SteamCore/Core/SteamMessageCodec.swift"
+fetch "Core/SteamProtocol.swift" "SteamCore/Core/SteamProtocol.swift"
+fetch "Core/SteamCMSession.swift" "SteamCore/Core/SteamCMSession.swift"
+fetch "Core/SteamSession.swift" "SteamCore/Core/SteamSession.swift"
+fetch "Library/SteamAppInfo.swift" "SteamCore/Library/SteamAppInfo.swift"
+fetch "Library/SteamLibraryFetcher.swift" "SteamCore/Library/SteamLibraryFetcher.swift"
+
+# Madeira's helper logs through its app-specific LogStore. Adapt only that
+# integration point to OSLog, with message content masked in system logs.
+cat > "$APP/SteamSignIn/Helpers/SteamLog.swift" <<'SWIFT'
 import Foundation
 import OSLog
 
@@ -35,16 +48,13 @@ enum SteamLog {
         subsystem: Bundle.main.bundleIdentifier ?? "com.mr3242scripter.MadeiraSteamLibrary",
         category: "Steam"
     )
-
     static func event(_ message: String) {
         logger.info("\(message, privacy: .private(mask: .hash))")
     }
-
     static func trace(_ message: String) {
         logger.debug("\(message, privacy: .private(mask: .hash))")
     }
 }
 SWIFT
-
-echo "Imported selected Madeira sign-in files into $DEST"
-echo "Add these files to your iOS target in Xcode and review upstream licensing."
+echo "Imported selected Madeira sign-in and owned-library files into App/"
+echo "No downloader, Dock, emulator, game-launch, or unrelated Madeira files were copied."
