@@ -40,6 +40,7 @@
         B00000000000000000000031 /* lzma_shim.c in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000031; };
         B00000000000000000000032 /* zstd_edu.c in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000032; };
         B00000000000000000000033 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F00000000000000000000033; };
+        B00000000000000000000038 /* liblzma.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F00000000000000000000038; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,7 @@
         F00000000000000000000031 /* lzma_shim.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lzma_shim.c; sourceTree = "<group>"; };
         F00000000000000000000032 /* zstd_edu.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_edu.c; sourceTree = "<group>"; };
         F00000000000000000000033 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+        F00000000000000000000038 /* liblzma.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = liblzma.tbd; path = usr/lib/liblzma.tbd; sourceTree = SDKROOT; };
         F00000000000000000000034 /* chunk_zip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = chunk_zip.h; sourceTree = "<group>"; };
         F00000000000000000000035 /* lzma_shim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lzma_shim.h; sourceTree = "<group>"; };
         F00000000000000000000036 /* zstd_edu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_edu.h; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
             buildActionMask = 2147483647;
             files = (
                 B00000000000000000000033 /* libz.tbd in Frameworks */,
+                B00000000000000000000038 /* liblzma.tbd in Frameworks */,
             );
             runOnlyForDeploymentPostprocessing = 0;
         };
@@ -403,6 +406,7 @@
                 MARKETING_VERSION = 0.1.0;
                 OTHER_LDFLAGS = (
                     "-lz",
+                    "-llzma",
                 );
                 PRODUCT_BUNDLE_IDENTIFIER = com.mr3242scripter.MadeiraSteamLibrary;
                 PRODUCT_NAME = "$(TARGET_NAME)";
@@ -435,6 +439,7 @@
                 MARKETING_VERSION = 0.1.0;
                 OTHER_LDFLAGS = (
                     "-lz",
+                    "-llzma",
                 );
                 PRODUCT_BUNDLE_IDENTIFIER = com.mr3242scripter.MadeiraSteamLibrary;
                 PRODUCT_NAME = "$(TARGET_NAME)";
