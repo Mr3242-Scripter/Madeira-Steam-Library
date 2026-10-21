@@ -29,7 +29,7 @@
         B00000000000000000000020 /* SteamAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000020; };
         B00000000000000000000021 /* SteamLibraryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000021; };
         B00000000000000000000022 /* LicenseListBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000022; };
-        B00000000000000000000023 /* SteamFileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000023; };
+        B00000000000000000000023 /* SteamKeyValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000023; };
         B00000000000000000000024 /* SteamDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000024; };
         B00000000000000000000025 /* DepotDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000025; };
         B00000000000000000000026 /* DepotManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000026; };
@@ -65,7 +65,7 @@
         F00000000000000000000020 /* SteamAppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamAppInfo.swift; sourceTree = "<group>"; };
         F00000000000000000000021 /* SteamLibraryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamLibraryFetcher.swift; sourceTree = "<group>"; };
         F00000000000000000000022 /* LicenseListBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseListBox.swift; sourceTree = "<group>"; };
-        F00000000000000000000023 /* SteamFileError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamFileError.swift; sourceTree = "<group>"; };
+        F00000000000000000000023 /* SteamKeyValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamKeyValues.swift; sourceTree = "<group>"; };
         F00000000000000000000024 /* SteamDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamDownloadService.swift; sourceTree = "<group>"; };
         F00000000000000000000025 /* DepotDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepotDownloader.swift; sourceTree = "<group>"; };
         F00000000000000000000026 /* DepotManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepotManifest.swift; sourceTree = "<group>"; };
@@ -197,7 +197,6 @@
                 F00000000000000000000018,
                 F00000000000000000000019,
                 F00000000000000000000022,
-                F00000000000000000000023,
             );
         };
 
@@ -229,6 +228,7 @@
             children = (
                 F00000000000000000000028,
                 F00000000000000000000029,
+                F00000000000000000000023,
             );
         };
 
