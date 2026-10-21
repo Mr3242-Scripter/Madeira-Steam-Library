@@ -314,7 +314,7 @@ private struct SteamSettingsView: View {
                     }
 
                     Text(
-                        "Requires location permission and the Location background mode in the Xcode project. Location updates can use additional battery. iOS may still suspend background work."
+                        "Requires Always location permission and a normal (non-LiveContainer) install with the Location background mode. Under LiveContainer this crashes iOS Core Location, so the toggle stays off. Prefer silent background audio there."
                     )
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -376,6 +376,37 @@ private final class BackgroundLocationController:
 
     private let manager = CLLocationManager()
 
+    /// True only when this process is allowed to use Core Location background updates.
+    /// LiveContainer / sideload hosts often declare UIBackgroundModes but are not
+    /// CL-backgroundable; setting allowsBackgroundLocationUpdates then aborts with
+    /// `!stayUp || CLClientIsBackgroundable(...)`.
+    private var isCoreLocationBackgroundable: Bool {
+        if Self.runningUnderLiveContainer {
+            return false
+        }
+        guard let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String],
+              modes.contains("location") else {
+            return false
+        }
+        return true
+    }
+
+    private static var runningUnderLiveContainer: Bool {
+        let path = Bundle.main.bundlePath
+        if path.localizedCaseInsensitiveContains("LiveContainer") {
+            return true
+        }
+        if ProcessInfo.processInfo.environment["LIVECONTAINER_SHARED"] != nil {
+            return true
+        }
+        let frameworks = Bundle.main.privateFrameworksPath
+            ?? Bundle.main.bundlePath
+        if frameworks.localizedCaseInsensitiveContains("LiveContainer") {
+            return true
+        }
+        return false
+    }
+
     override init() {
         super.init()
 
@@ -392,6 +423,12 @@ private final class BackgroundLocationController:
         guard enabled != isEnabled else { return }
 
         if enabled {
+            if !isCoreLocationBackgroundable {
+                isEnabled = false
+                UserDefaults.standard.set(false, forKey: "backgroundLocationEnabled")
+                status = Self.unavailableMessage
+                return
+            }
             isEnabled = true
             UserDefaults.standard.set(
                 true,
@@ -405,7 +442,15 @@ private final class BackgroundLocationController:
         }
     }
 
+    private static let unavailableMessage =
+        "Background location is not available in this install (e.g. LiveContainer). Core Location refuses background updates here, so the toggle is disabled to avoid a crash. Silent background audio may still help keep the process awake."
+
     private func enableLocationUpdates() {
+        guard isCoreLocationBackgroundable else {
+            disableLocation(message: Self.unavailableMessage)
+            return
+        }
+
         guard CLLocationManager.locationServicesEnabled() else {
             disableLocation(
                 message: "Location Services are disabled on this iPhone."
@@ -415,10 +460,7 @@ private final class BackgroundLocationController:
 
         switch manager.authorizationStatus {
         case .authorizedAlways:
-            manager.allowsBackgroundLocationUpdates = true
-            manager.pausesLocationUpdatesAutomatically = true
-            manager.startUpdatingLocation()
-            status = "Background location is enabled."
+            applyBackgroundLocationIfPossible()
 
         case .notDetermined:
             status =
@@ -442,9 +484,23 @@ private final class BackgroundLocationController:
         }
     }
 
+    /// Sets background flags only when safe; never asserts under LiveContainer.
+    private func applyBackgroundLocationIfPossible() {
+        guard isCoreLocationBackgroundable else {
+            disableLocation(message: Self.unavailableMessage)
+            return
+        }
+        manager.pausesLocationUpdatesAutomatically = true
+        manager.allowsBackgroundLocationUpdates = true
+        manager.startUpdatingLocation()
+        status = "Background location is enabled."
+    }
+
     private func disableLocation(message: String) {
         manager.stopUpdatingLocation()
-        manager.allowsBackgroundLocationUpdates = false
+        if isCoreLocationBackgroundable {
+            manager.allowsBackgroundLocationUpdates = false
+        }
 
         isEnabled = false
         UserDefaults.standard.set(
@@ -454,16 +510,19 @@ private final class BackgroundLocationController:
         status = message
     }
 
-    func locationManagerDidChangeAuthorization(
+    nonisolated func locationManagerDidChangeAuthorization(
         _ manager: CLLocationManager
     ) {
+        Task { @MainActor in
+            self.handleAuthorizationChange(manager)
+        }
+    }
+
+    private func handleAuthorizationChange(_ manager: CLLocationManager) {
         guard isEnabled else { return }
 
         if manager.authorizationStatus == .authorizedAlways {
-            manager.allowsBackgroundLocationUpdates = true
-            manager.pausesLocationUpdatesAutomatically = true
-            manager.startUpdatingLocation()
-            status = "Background location is enabled."
+            applyBackgroundLocationIfPossible()
         } else if manager.authorizationStatus == .denied
                     || manager.authorizationStatus == .restricted {
             disableLocation(
@@ -472,11 +531,13 @@ private final class BackgroundLocationController:
         }
     }
 
-    func locationManager(
+    nonisolated func locationManager(
         _ manager: CLLocationManager,
         didFailWithError error: Error
     ) {
-        status = "Location update error: \(error.localizedDescription)"
+        Task { @MainActor in
+            self.status = "Location update error: \(error.localizedDescription)"
+        }
     }
 }
 
@@ -540,7 +601,7 @@ private final class SilentBackgroundAudioController: ObservableObject {
                 forKey: "silentBackgroundAudioEnabled"
             )
 
-            status = "Silent audio is playing."
+            status = "Silent background audio is playing."
         } catch {
             player?.stop()
             player = nil
