@@ -9,12 +9,14 @@ A standalone iOS companion project for browsing a Steam account's owned games an
 - [x] Selective importer for Madeira's existing Steam sign-in implementation
 - [x] macOS GitHub Actions build workflow
 - [x] Owned Steam library listing
-- [ ] Madeira-compatible game download/install pipeline
-- [ ] Live device authentication and install verification
+- [x] Madeira-compatible game download/install pipeline (source + UI; needs live device verification)
+- [ ] Live device authentication and install verification with Madeira
 
-## Reuse Madeira's sign-in
+## Reuse Madeira's sign-in and downloader
 
 Madeira's sign-in uses Valve's public `IAuthenticationService` with password + Steam Guard or QR authentication, then stores client tokens in the device-only iOS Keychain. The app UI is wired to the same `SteamSignInModel` API; it does not substitute Steam OpenID or a custom password handler.
+
+Downloads use Madeira's `DepotDownloader` / `ContentDecryptor` / `AppManifestWriter` stack. Ownership is enforced by Steam (depot keys and manifest request codes). Install layout is `Documents/steamapps/common/<installdir>` plus `appmanifest_<appid>.acf`.
 
 On a Mac with Xcode and curl, run:
 
@@ -22,18 +24,7 @@ On a Mac with Xcode and curl, run:
 sh scripts/import-madeira-steam-signin.sh
 ```
 
-This imports only these authentication files from the upstream source tree:
-- `SteamSignIn.swift`
-- `Auth/SteamAuthAPI.swift`
-- `Auth/SteamCredentialAuth.swift`
-- `Auth/SteamQRAuth.swift`
-- `Auth/SteamTokenStore.swift`
-- `Core/SteamError.swift`
-- `Helpers/SteamDevice.swift`
-- `Helpers/SteamLog.swift`
-- `Proto/SteamProtoMessages.swift`
-
-It does not copy Madeira's library, downloader, emulator, Dock, or unrelated code.
+This imports authentication, library, content, install-record, and native decompressor files from the upstream source tree. It does not clone the whole Madeira repository.
 
 Reference docs:
 - [Madeira Steam sign-in](https://github.com/willfaust/Madeira/blob/main/docs/STEAM_SIGNIN.md)
@@ -41,13 +32,18 @@ Reference docs:
 
 ## Build
 
-Open `MadeiraSteamLibrary.xcodeproj` in Xcode after running the importer. GitHub Actions also runs an iOS Simulator build after importing the same files.
+1. Run the importer (above).
+2. Open `MadeiraSteamLibrary.xcodeproj` in Xcode.
+3. Ensure imported files under `App/SteamCore/Content`, `Install`, and `Native` are in the app target.
+4. Set **Objective-C Bridging Header** to `App/SteamCore/Native/MadeiraSteamLibrary-Bridging-Header.h`.
+5. Link `libz` (Build Phases → Link Binary With Libraries).
+6. Build for Simulator or device.
+
+GitHub Actions also runs an iOS Simulator build after importing the same files.
 
 ## What remains
 
-The Library tab is currently a placeholder; the owned-game fetcher is not implemented yet. The download/install pipeline is also not implemented yet. Those must be ported as a small, reviewed slice from Madeira with their direct dependencies, preserving Steam's ownership checks and Madeira's install-record format. No DRM or entitlement bypass is intended.
-
-See [setup](docs/SETUP.md) and [implementation plan](docs/IMPLEMENTATION.md).
+Live verification on a real device: sign-in, library refresh, a small owned title download, and confirmation that Madeira Dock sees the install record. See [setup](docs/SETUP.md) and [implementation status](docs/IMPLEMENTATION_STATUS.md).
 
 ## Licensing and security
 
