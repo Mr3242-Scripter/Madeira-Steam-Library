@@ -8,7 +8,7 @@ A standalone iOS companion project for browsing a Steam account's owned games an
 - [x] Settings UI scaffold for password + Steam Guard and QR sign-in
 - [x] Selective importer for Madeira's existing Steam sign-in implementation
 - [x] macOS GitHub Actions build workflow
-- [ ] Owned Steam library listing
+- [x] Owned Steam library listing
 - [ ] Madeira-compatible game download/install pipeline
 - [ ] Live device authentication and install verification
 
