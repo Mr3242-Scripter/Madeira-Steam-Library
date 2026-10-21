@@ -20,6 +20,12 @@ final class SteamOwnedGamesService: ObservableObject {
     private let session = SteamSession()
     private lazy var fetcher = SteamLibraryFetcher(session: session)
 
+    func clear() {
+        games = []
+        error = nil
+        isLoading = false
+    }
+
     func refresh() async {
         guard SteamSignIn.isSignedIn else {
             games = []

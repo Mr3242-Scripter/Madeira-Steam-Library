@@ -128,11 +128,9 @@ final class SteamDownloadService: ObservableObject {
         }
 
         if let folderName, !folderName.isEmpty {
-            let common = steamAppsURL
-                .appendingPathComponent("common", isDirectory: true)
-                .appendingPathComponent(folderName, isDirectory: true)
-            // Only delete if path stays under steamapps/common
-            if common.path.hasPrefix(steamAppsURL.appendingPathComponent("common").path) {
+            let commonRoot = steamAppsURL.appendingPathComponent("common", isDirectory: true)
+            let common = commonRoot.appendingPathComponent(folderName, isDirectory: true)
+            if common.path.hasPrefix(commonRoot.path) {
                 try? fm.removeItem(at: common)
             }
         }
@@ -156,7 +154,6 @@ final class SteamDownloadService: ObservableObject {
         for game in localGames {
             deleteLocalCopy(appID: game.id)
         }
-        // Sweep leftover folders under downloading / common / depotcache
         let fm = FileManager.default
         for sub in ["downloading", "common", "depotcache"] {
             let url = steamAppsURL.appendingPathComponent(sub, isDirectory: true)
@@ -180,15 +177,13 @@ final class SteamDownloadService: ObservableObject {
 
         deleteAllLocalCopies()
 
-        // Clear Steam session tokens
         SteamSignInModel.shared.signOut()
+        SteamOwnedGamesService.shared.clear()
 
-        // Background keep-alive prefs
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "backgroundLocationEnabled")
         defaults.removeObject(forKey: "silentBackgroundAudioEnabled")
 
-        // Drop any other app-scoped keys we own
         let bundleID = Bundle.main.bundleIdentifier ?? ""
         if !bundleID.isEmpty, let domain = defaults.persistentDomain(forName: bundleID) {
             for key in domain.keys {
@@ -197,8 +192,6 @@ final class SteamDownloadService: ObservableObject {
         }
 
         jobs = []
-        SteamOwnedGamesService.shared.games = []
-        SteamOwnedGamesService.shared.error = nil
         refreshLocalInventory()
     }
 
@@ -208,7 +201,6 @@ final class SteamDownloadService: ObservableObject {
 
         var found: [Int: LocalGame] = [:]
 
-        // Complete installs from appmanifest_*.acf
         if let items = try? fm.contentsOfDirectory(at: steamAppsURL, includingPropertiesForKeys: nil) {
             for url in items {
                 let name = url.lastPathComponent
@@ -254,7 +246,6 @@ final class SteamDownloadService: ObservableObject {
             }
         }
 
-        // Partial-only (no manifest yet)
         let downloadingRoot = steamAppsURL.appendingPathComponent("downloading", isDirectory: true)
         if let dirs = try? fm.contentsOfDirectory(at: downloadingRoot, includingPropertiesForKeys: nil) {
             for dir in dirs {
