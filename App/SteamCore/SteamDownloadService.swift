@@ -26,10 +26,6 @@ final class SteamDownloadService: ObservableObject {
     private var activeTask: Task<Void, Never>?
     private var activeAppID: Int?
 
-    /// Root for Steam library layout inside the app sandbox:
-    /// Documents/steamapps/common/<installdir>
-    /// Documents/steamapps/appmanifest_<id>.acf
-    /// Documents/steamapps/downloading/
     var steamAppsURL: URL {
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         return docs.appendingPathComponent("steamapps", isDirectory: true)
@@ -48,7 +44,6 @@ final class SteamDownloadService: ObservableObject {
         return FileManager.default.fileExists(atPath: manifest.path)
     }
 
-    /// Start or resume a download for an owned app.
     func start(appID: Int, name: String, installDirectory: String) {
         guard SteamSignIn.isSignedIn else {
             upsert(Job(id: appID, name: name, progress: .init(), state: .failed,
@@ -94,6 +89,7 @@ final class SteamDownloadService: ObservableObject {
         do {
             try FileManager.default.createDirectory(at: steamAppsURL, withIntermediateDirectories: true)
 
+            // SteamSession conforms to SteamCMSession; pass it directly.
             let session = SteamSession()
             let fetcher = SteamLibraryFetcher(session: session)
             let apps = try await fetcher.fetchOwnedApps()
@@ -104,35 +100,43 @@ final class SteamDownloadService: ObservableObject {
             upsert(Job(id: appID, name: name, progress: .init(phase: .preparing),
                        state: .running, errorMessage: nil))
 
-            let downloader = DepotDownloader(session: session.cmSession)
+            let downloader = DepotDownloader(session: session)
             let installURL = try await downloader.install(
                 app,
                 steamApps: steamAppsURL,
-                ownedDepots: { nil },
-                progress: { [weak self] prog in
-                    Task { @MainActor in
-                        guard let self else { return }
-                        if var job = self.job(for: appID) {
-                            job.progress = prog
-                            job.state = .running
-                            self.upsert(job)
-                        }
+                ownedDepots: { nil }
+            ) { [weak self] prog in
+                Task { @MainActor in
+                    guard let self else { return }
+                    if var job = self.job(for: appID) {
+                        job.progress = prog
+                        job.state = .running
+                        self.upsert(job)
                     }
                 }
-            )
+            }
 
             _ = installURL
-            upsert(Job(id: appID, name: name,
-                       progress: SteamDownloadProgress(phase: .finishing, totalBytes: 1, doneBytes: 1),
-                       state: .finished, errorMessage: nil))
+            upsert(Job(
+                id: appID,
+                name: name,
+                progress: SteamDownloadProgress(phase: .finishing, totalBytes: 1, doneBytes: 1),
+                state: .finished,
+                errorMessage: nil
+            ))
         } catch is CancellationError {
             if var job = job(for: appID) {
                 job.state = .cancelled
                 upsert(job)
             }
         } catch {
-            upsert(Job(id: appID, name: name, progress: .init(),
-                       state: .failed, errorMessage: SteamSignIn.message(error)))
+            upsert(Job(
+                id: appID,
+                name: name,
+                progress: .init(),
+                state: .failed,
+                errorMessage: SteamSignIn.message(error)
+            ))
         }
     }
 
