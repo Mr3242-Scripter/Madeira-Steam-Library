@@ -1,93 +1,374 @@
 // !$*UTF8*$!
 {
- archiveVersion = 1; classes = {}; objectVersion = 56;
- objects = {
+    archiveVersion = 1;
+    classes = {};
+    objectVersion = 56;
+
+    objects = {
+
 /* Begin PBXBuildFile section */
-B00000000000000000000001 /* MadeiraSteamLibraryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000001; };
-B00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000002; };
-B00000000000000000000003 /* MadeiraConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000003; };
-B00000000000000000000004 /* SteamSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000004; };
-B00000000000000000000005 /* SteamAuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000005; };
-B00000000000000000000006 /* SteamCredentialAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000006; };
-B00000000000000000000007 /* SteamQRAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000007; };
-B00000000000000000000008 /* SteamTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000008; };
-B00000000000000000000009 /* SteamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000009; };
-B00000000000000000000010 /* SteamDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000010; };
-B00000000000000000000011 /* SteamLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000011; };
-B00000000000000000000012 /* SteamProtoMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000012; };
-B00000000000000000000013 /* SteamOwnedGamesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000013; };
-B00000000000000000000014 /* CMServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000014; };
-B00000000000000000000015 /* SteamConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000015; };
-B00000000000000000000016 /* SteamMessageCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000016; };
-B00000000000000000000017 /* SteamProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000017; };
-B00000000000000000000018 /* SteamCMSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000018; };
-B00000000000000000000019 /* SteamSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000019; };
-B00000000000000000000020 /* SteamAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000020; };
-B00000000000000000000021 /* SteamLibraryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000021; };
-B00000000000000000000022 /* LicenseListBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000022; };
-B00000000000000000000023 /* SteamFileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000023; };
+        B00000000000000000000001 /* MadeiraSteamLibraryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000001; };
+        B00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000002; };
+        B00000000000000000000003 /* MadeiraConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000003; };
+        B00000000000000000000004 /* SteamSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000004; };
+        B00000000000000000000005 /* SteamAuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000005; };
+        B00000000000000000000006 /* SteamCredentialAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000006; };
+        B00000000000000000000007 /* SteamQRAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000007; };
+        B00000000000000000000008 /* SteamTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000008; };
+        B00000000000000000000009 /* SteamError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000009; };
+        B00000000000000000000010 /* SteamDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000010; };
+        B00000000000000000000011 /* SteamLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000011; };
+        B00000000000000000000012 /* SteamProtoMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000012; };
+        B00000000000000000000013 /* SteamOwnedGamesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000013; };
+        B00000000000000000000014 /* CMServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000014; };
+        B00000000000000000000015 /* SteamConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000015; };
+        B00000000000000000000016 /* SteamMessageCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000016; };
+        B00000000000000000000017 /* SteamProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000017; };
+        B00000000000000000000018 /* SteamCMSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000018; };
+        B00000000000000000000019 /* SteamSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000019; };
+        B00000000000000000000020 /* SteamAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000020; };
+        B00000000000000000000021 /* SteamLibraryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000021; };
+        B00000000000000000000022 /* LicenseListBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000022; };
+        B00000000000000000000023 /* SteamFileError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000023; };
 /* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-F00000000000000000000001 /* MadeiraSteamLibraryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MadeiraSteamLibraryApp.swift; sourceTree = "<group>"; };
-F00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-F00000000000000000000003 /* MadeiraConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MadeiraConfig.swift; sourceTree = "<group>"; };
-F00000000000000000000004 /* SteamSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamSignIn.swift; sourceTree = "<group>"; };
-F00000000000000000000005 /* SteamAuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamAuthAPI.swift; sourceTree = "<group>"; };
-F00000000000000000000006 /* SteamCredentialAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamCredentialAuth.swift; sourceTree = "<group>"; };
-F00000000000000000000007 /* SteamQRAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamQRAuth.swift; sourceTree = "<group>"; };
-F00000000000000000000008 /* SteamTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamTokenStore.swift; sourceTree = "<group>"; };
-F00000000000000000000009 /* SteamError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamError.swift; sourceTree = "<group>"; };
-F00000000000000000000010 /* SteamDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamDevice.swift; sourceTree = "<group>"; };
-F00000000000000000000011 /* SteamLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamLog.swift; sourceTree = "<group>"; };
-F00000000000000000000012 /* SteamProtoMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamProtoMessages.swift; sourceTree = "<group>"; };
-F00000000000000000000013 /* SteamOwnedGamesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamOwnedGamesService.swift; sourceTree = "<group>"; };
-F00000000000000000000014 /* CMServerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMServerList.swift; sourceTree = "<group>"; };
-F00000000000000000000015 /* SteamConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamConnection.swift; sourceTree = "<group>"; };
-F00000000000000000000016 /* SteamMessageCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamMessageCodec.swift; sourceTree = "<group>"; };
-F00000000000000000000017 /* SteamProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamProtocol.swift; sourceTree = "<group>"; };
-F00000000000000000000018 /* SteamCMSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamCMSession.swift; sourceTree = "<group>"; };
-F00000000000000000000019 /* SteamSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamSession.swift; sourceTree = "<group>"; };
-F00000000000000000000020 /* SteamAppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamAppInfo.swift; sourceTree = "<group>"; };
-F00000000000000000000021 /* SteamLibraryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamLibraryFetcher.swift; sourceTree = "<group>"; };
-F00000000000000000000022 /* LicenseListBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseListBox.swift; sourceTree = "<group>"; };
-F00000000000000000000023 /* SteamFileError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamFileError.swift; sourceTree = "<group>"; };
-F00000000000000000000099 /* MadeiraSteamLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MadeiraSteamLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+        F00000000000000000000001 /* MadeiraSteamLibraryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MadeiraSteamLibraryApp.swift; sourceTree = "<group>"; };
+        F00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+        F00000000000000000000003 /* MadeiraConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MadeiraConfig.swift; sourceTree = "<group>"; };
+        F00000000000000000000004 /* SteamSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamSignIn.swift; sourceTree = "<group>"; };
+        F00000000000000000000005 /* SteamAuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamAuthAPI.swift; sourceTree = "<group>"; };
+        F00000000000000000000006 /* SteamCredentialAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamCredentialAuth.swift; sourceTree = "<group>"; };
+        F00000000000000000000007 /* SteamQRAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamQRAuth.swift; sourceTree = "<group>"; };
+        F00000000000000000000008 /* SteamTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamTokenStore.swift; sourceTree = "<group>"; };
+        F00000000000000000000009 /* SteamError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamError.swift; sourceTree = "<group>"; };
+        F00000000000000000000010 /* SteamDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamDevice.swift; sourceTree = "<group>"; };
+        F00000000000000000000011 /* SteamLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamLog.swift; sourceTree = "<group>"; };
+        F00000000000000000000012 /* SteamProtoMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamProtoMessages.swift; sourceTree = "<group>"; };
+        F00000000000000000000013 /* SteamOwnedGamesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamOwnedGamesService.swift; sourceTree = "<group>"; };
+        F00000000000000000000014 /* CMServerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMServerList.swift; sourceTree = "<group>"; };
+        F00000000000000000000015 /* SteamConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamConnection.swift; sourceTree = "<group>"; };
+        F00000000000000000000016 /* SteamMessageCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamMessageCodec.swift; sourceTree = "<group>"; };
+        F00000000000000000000017 /* SteamProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamProtocol.swift; sourceTree = "<group>"; };
+        F00000000000000000000018 /* SteamCMSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamCMSession.swift; sourceTree = "<group>"; };
+        F00000000000000000000019 /* SteamSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamSession.swift; sourceTree = "<group>"; };
+        F00000000000000000000020 /* SteamAppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamAppInfo.swift; sourceTree = "<group>"; };
+        F00000000000000000000021 /* SteamLibraryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamLibraryFetcher.swift; sourceTree = "<group>"; };
+        F00000000000000000000022 /* LicenseListBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseListBox.swift; sourceTree = "<group>"; };
+        F00000000000000000000023 /* SteamFileError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamFileError.swift; sourceTree = "<group>"; };
+        F00000000000000000000099 /* MadeiraSteamLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MadeiraSteamLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
 /* Begin PBXGroup section */
-G00000000000000000000001 = {isa = PBXGroup; children = (G00000000000000000000002, G00000000000000000000003,); sourceTree = "<group>"; };
-G00000000000000000000002 /* App */ = {isa = PBXGroup; path = App; sourceTree = "<group>"; children = (F00000000000000000000001, F00000000000000000000002, F00000000000000000000003, G00000000000000000000004, G00000000000000000000009,); };
-G00000000000000000000004 /* SteamSignIn */ = {isa = PBXGroup; path = SteamSignIn; sourceTree = "<group>"; children = (F00000000000000000000004, G00000000000000000000005, G00000000000000000000006, G00000000000000000000007, G00000000000000000000008,); };
-G00000000000000000000005 /* Auth */ = {isa = PBXGroup; path = Auth; sourceTree = "<group>"; children = (F00000000000000000000005, F00000000000000000000006, F00000000000000000000007, F00000000000000000000008,); };
-G00000000000000000000006 /* Core */ = {isa = PBXGroup; path = Core; sourceTree = "<group>"; children = (F00000000000000000000009,); };
-G00000000000000000000007 /* Helpers */ = {isa = PBXGroup; path = Helpers; sourceTree = "<group>"; children = (F00000000000000000000010, F00000000000000000000011,); };
-G00000000000000000000008 /* Proto */ = {isa = PBXGroup; path = Proto; sourceTree = "<group>"; children = (F00000000000000000000012,); };
-G00000000000000000000009 /* SteamCore */ = {isa = PBXGroup; path = SteamCore; sourceTree = "<group>"; children = (F00000000000000000000013, G00000000000000000000010, G00000000000000000000011,); };
-G00000000000000000000010 /* SteamCore/Core */ = {isa = PBXGroup; path = Core; sourceTree = "<group>"; children = (F00000000000000000000014, F00000000000000000000015, F00000000000000000000016, F00000000000000000000017, F00000000000000000000018, F00000000000000000000019, F00000000000000000000022, F00000000000000000000023,); };
-G00000000000000000000011 /* SteamCore/Library */ = {isa = PBXGroup; path = Library; sourceTree = "<group>"; children = (F00000000000000000000020, F00000000000000000000021,); };
-G00000000000000000000003 /* Products */ = {isa = PBXGroup; name = Products; children = (F00000000000000000000099,); sourceTree = "<group>"; };
+        G00000000000000000000001 = {
+            isa = PBXGroup;
+            children = (
+                G00000000000000000000002,
+                G00000000000000000000003,
+            );
+            sourceTree = "<group>";
+        };
+
+        G00000000000000000000002 /* App */ = {
+            isa = PBXGroup;
+            path = App;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000001,
+                F00000000000000000000002,
+                F00000000000000000000003,
+                G00000000000000000000004,
+                G00000000000000000000009,
+            );
+        };
+
+        G00000000000000000000004 /* SteamSignIn */ = {
+            isa = PBXGroup;
+            path = SteamSignIn;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000004,
+                G00000000000000000000005,
+                G00000000000000000000006,
+                G00000000000000000000007,
+                G00000000000000000000008,
+            );
+        };
+
+        G00000000000000000000005 /* Auth */ = {
+            isa = PBXGroup;
+            path = Auth;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000005,
+                F00000000000000000000006,
+                F00000000000000000000007,
+                F00000000000000000000008,
+            );
+        };
+
+        G00000000000000000000006 /* Core */ = {
+            isa = PBXGroup;
+            path = Core;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000009,
+            );
+        };
+
+        G00000000000000000000007 /* Helpers */ = {
+            isa = PBXGroup;
+            path = Helpers;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000010,
+                F00000000000000000000011,
+            );
+        };
+
+        G00000000000000000000008 /* Proto */ = {
+            isa = PBXGroup;
+            path = Proto;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000012,
+            );
+        };
+
+        G00000000000000000000009 /* SteamCore */ = {
+            isa = PBXGroup;
+            path = SteamCore;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000013,
+                G00000000000000000000010,
+                G00000000000000000000011,
+            );
+        };
+
+        G00000000000000000000010 /* SteamCore/Core */ = {
+            isa = PBXGroup;
+            path = Core;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000014,
+                F00000000000000000000015,
+                F00000000000000000000016,
+                F00000000000000000000017,
+                F00000000000000000000018,
+                F00000000000000000000019,
+                F00000000000000000000022,
+                F00000000000000000000023,
+            );
+        };
+
+        G00000000000000000000011 /* SteamCore/Library */ = {
+            isa = PBXGroup;
+            path = Library;
+            sourceTree = "<group>";
+            children = (
+                F00000000000000000000020,
+                F00000000000000000000021,
+            );
+        };
+
+        G00000000000000000000003 /* Products */ = {
+            isa = PBXGroup;
+            name = Products;
+            children = (
+                F00000000000000000000099,
+            );
+            sourceTree = "<group>";
+        };
 /* End PBXGroup section */
+
 /* Begin PBXNativeTarget section */
-T00000000000000000000001 /* MadeiraSteamLibrary */ = {isa = PBXNativeTarget; buildConfigurationList = L00000000000000000000002; buildPhases = (S00000000000000000000001, R00000000000000000000001,); buildRules = (); dependencies = (); name = MadeiraSteamLibrary; productName = MadeiraSteamLibrary; productReference = F00000000000000000000099; productType = "com.apple.product-type.application"; };
+        T00000000000000000000001 /* MadeiraSteamLibrary */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = L00000000000000000000002;
+            buildPhases = (
+                S00000000000000000000001,
+                R00000000000000000000001,
+            );
+            buildRules = ();
+            dependencies = ();
+            name = MadeiraSteamLibrary;
+            productName = MadeiraSteamLibrary;
+            productReference = F00000000000000000000099;
+            productType = "com.apple.product-type.application";
+        };
 /* End PBXNativeTarget section */
+
 /* Begin PBXProject section */
-P00000000000000000000001 /* Project object */ = {isa = PBXProject; attributes = {BuildIndependentTargetsInParallel = 1; LastUpgradeCheck = 1600; TargetAttributes = {T00000000000000000000001 = {CreatedOnToolsVersion = 16.0;};};}; buildConfigurationList = L00000000000000000000001; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base,); mainGroup = G00000000000000000000001; productRefGroup = G00000000000000000000003; projectDirPath = ""; projectRoot = ""; targets = (T00000000000000000000001,); };
+        P00000000000000000000001 /* Project object */ = {
+            isa = PBXProject;
+            attributes = {
+                BuildIndependentTargetsInParallel = 1;
+                LastUpgradeCheck = 1600;
+                TargetAttributes = {
+                    T00000000000000000000001 = {
+                        CreatedOnToolsVersion = 16.0;
+                    };
+                };
+            };
+            buildConfigurationList = L00000000000000000000001;
+            compatibilityVersion = "Xcode 14.0";
+            developmentRegion = en;
+            hasScannedForEncodings = 0;
+            knownRegions = (
+                en,
+                Base,
+            );
+            mainGroup = G00000000000000000000001;
+            productRefGroup = G00000000000000000000003;
+            projectDirPath = "";
+            projectRoot = "";
+            targets = (
+                T00000000000000000000001,
+            );
+        };
 /* End PBXProject section */
+
 /* Begin PBXSourcesBuildPhase section */
-S00000000000000000000001 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (B00000000000000000000001, B00000000000000000000002, B00000000000000000000003, B00000000000000000000004, B00000000000000000000005, B00000000000000000000006, B00000000000000000000007, B00000000000000000000008, B00000000000000000000009, B00000000000000000000010, B00000000000000000000011, B00000000000000000000012, B00000000000000000000013, B00000000000000000000014, B00000000000000000000015, B00000000000000000000016, B00000000000000000000017, B00000000000000000000018, B00000000000000000000019, B00000000000000000000020, B00000000000000000000021, B00000000000000000000022, B00000000000000000000023,); runOnlyForDeploymentPostprocessing = 0; };
+        S00000000000000000000001 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                B00000000000000000000001,
+                B00000000000000000000002,
+                B00000000000000000000003,
+                B00000000000000000000004,
+                B00000000000000000000005,
+                B00000000000000000000006,
+                B00000000000000000000007,
+                B00000000000000000000008,
+                B00000000000000000000009,
+                B00000000000000000000010,
+                B00000000000000000000011,
+                B00000000000000000000012,
+                B00000000000000000000013,
+                B00000000000000000000014,
+                B00000000000000000000015,
+                B00000000000000000000016,
+                B00000000000000000000017,
+                B00000000000000000000018,
+                B00000000000000000000019,
+                B00000000000000000000020,
+                B00000000000000000000021,
+                B00000000000000000000022,
+                B00000000000000000000023,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
 /* End PBXSourcesBuildPhase section */
+
 /* Begin PBXResourcesBuildPhase section */
-R00000000000000000000001 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+        R00000000000000000000001 /* Resources */ = {
+            isa = PBXResourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = ();
+            runOnlyForDeploymentPostprocessing = 0;
+        };
 /* End PBXResourcesBuildPhase section */
+
 /* Begin XCBuildConfiguration section */
-C00000000000000000000001 = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0;}; name = Debug; };
-C00000000000000000000002 = {isa = XCBuildConfiguration; buildSettings = {ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; IPHONEOS_DEPLOYMENT_TARGET = 17.0; SDKROOT = iphoneos; SWIFT_VERSION = 5.0;}; name = Release; };
-C00000000000000000000003 = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Madeira Steam Library"; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games"; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.mr3242scripter.MadeiraSteamLibrary; PRODUCT_NAME = "$(TARGET_NAME)"; TARGETED_DEVICE_FAMILY = "1,2"; SWIFT_EMIT_LOC_STRINGS = YES;}; name = Debug; };
-C00000000000000000000004 = {isa = XCBuildConfiguration; buildSettings = {ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; GENERATE_INFOPLIST_FILE = YES; INFOPLIST_KEY_CFBundleDisplayName = "Madeira Steam Library"; INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games"; IPHONEOS_DEPLOYMENT_TARGET = 17.0; MARKETING_VERSION = 0.1.0; PRODUCT_BUNDLE_IDENTIFIER = com.mr3242scripter.MadeiraSteamLibrary; PRODUCT_NAME = "$(TARGET_NAME)"; TARGETED_DEVICE_FAMILY = "1,2"; SWIFT_EMIT_LOC_STRINGS = YES;}; name = Release; };
+        C00000000000000000000001 /* Project Debug */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                ALWAYS_SEARCH_USER_PATHS = NO;
+                CLANG_ENABLE_MODULES = YES;
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                SDKROOT = iphoneos;
+                SWIFT_VERSION = 5.0;
+            };
+            name = Debug;
+        };
+
+        C00000000000000000000002 /* Project Release */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                ALWAYS_SEARCH_USER_PATHS = NO;
+                CLANG_ENABLE_MODULES = YES;
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                SDKROOT = iphoneos;
+                SWIFT_VERSION = 5.0;
+            };
+            name = Release;
+        };
+
+        C00000000000000000000003 /* Target Debug */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+                CODE_SIGN_STYLE = Automatic;
+                CURRENT_PROJECT_VERSION = 1;
+                GENERATE_INFOPLIST_FILE = YES;
+                INFOPLIST_KEY_CFBundleDisplayName = "Madeira Steam Library";
+                INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
+                INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location access allows Madeira Steam Library to receive location updates when background location is enabled.";
+                INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location access is used when you enable background location.";
+                INFOPLIST_KEY_UIBackgroundModes = (
+                    location,
+                    audio,
+                );
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                MARKETING_VERSION = 0.1.0;
+                PRODUCT_BUNDLE_IDENTIFIER = com.mr3242scripter.MadeiraSteamLibrary;
+                PRODUCT_NAME = "$(TARGET_NAME)";
+                TARGETED_DEVICE_FAMILY = "1,2";
+                SWIFT_EMIT_LOC_STRINGS = YES;
+            };
+            name = Debug;
+        };
+
+        C00000000000000000000004 /* Target Release */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+                CODE_SIGN_STYLE = Automatic;
+                CURRENT_PROJECT_VERSION = 1;
+                GENERATE_INFOPLIST_FILE = YES;
+                INFOPLIST_KEY_CFBundleDisplayName = "Madeira Steam Library";
+                INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
+                INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location access allows Madeira Steam Library to receive location updates when background location is enabled.";
+                INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location access is used when you enable background location.";
+                INFOPLIST_KEY_UIBackgroundModes = (
+                    location,
+                    audio,
+                );
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                MARKETING_VERSION = 0.1.0;
+                PRODUCT_BUNDLE_IDENTIFIER = com.mr3242scripter.MadeiraSteamLibrary;
+                PRODUCT_NAME = "$(TARGET_NAME)";
+                TARGETED_DEVICE_FAMILY = "1,2";
+                SWIFT_EMIT_LOC_STRINGS = YES;
+            };
+            name = Release;
+        };
 /* End XCBuildConfiguration section */
+
 /* Begin XCConfigurationList section */
-L00000000000000000000001 = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000001, C00000000000000000000002,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
-L00000000000000000000002 = {isa = XCConfigurationList; buildConfigurations = (C00000000000000000000003, C00000000000000000000004,); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+        L00000000000000000000001 /* Project configuration list */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                C00000000000000000000001,
+                C00000000000000000000002,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
+
+        L00000000000000000000002 /* Target configuration list */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                C00000000000000000000003,
+                C00000000000000000000004,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
 /* End XCConfigurationList section */
- };
- rootObject = P00000000000000000000001;
+    };
+
+    rootObject = P00000000000000000000001;
 }
