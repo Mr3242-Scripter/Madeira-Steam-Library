@@ -143,6 +143,13 @@ final class SteamDownloadService: ObservableObject {
         return true
     }
 
+    /// Drop only the download journal (keep a finished install).
+    func clearPartialJournal(appID: Int) {
+        let journal = steamAppsURL.appendingPathComponent("downloading/\(appID)", isDirectory: true)
+        try? FileManager.default.removeItem(at: journal)
+        refreshLocalInventory()
+    }
+
     func deleteLocalCopies(appIDs: [Int]) {
         for id in appIDs {
             deleteLocalCopy(appID: id)
@@ -316,6 +323,10 @@ final class SteamDownloadService: ObservableObject {
             }
 
             _ = installURL
+
+            // Successful install: drop journal so the row is not stuck as "incomplete"
+            clearPartialJournal(appID: appID)
+
             upsert(Job(
                 id: appID,
                 name: name,

@@ -4,10 +4,6 @@ struct LibraryView: View {
     @StateObject private var library = SteamOwnedGamesService.shared
     @StateObject private var downloads = SteamDownloadService.shared
 
-    @State private var recoveryQueue: [SteamDownloadService.LocalGame] = []
-    @State private var recoveryCurrent: SteamDownloadService.LocalGame?
-    @State private var showRecovery = false
-
     var body: some View {
         NavigationStack {
             Group {
@@ -38,7 +34,7 @@ struct LibraryView: View {
                     Button {
                         Task {
                             await library.refresh()
-                            presentRecoveryIfNeeded()
+                            downloads.refreshLocalInventory()
                         }
                     } label: {
                         if library.isLoading {
@@ -54,47 +50,9 @@ struct LibraryView: View {
                 if library.games.isEmpty && !library.isLoading {
                     await library.refresh()
                 }
-                presentRecoveryIfNeeded()
-            }
-            .alert(
-                "Incomplete download",
-                isPresented: $showRecovery,
-                presenting: recoveryCurrent
-            ) { game in
-                Button("Continue download") {
-                    let name = library.games.first(where: { $0.id == game.id })?.name ?? game.name
-                    let dir = library.games.first(where: { $0.id == game.id })?.installDirectory ?? game.folderName ?? ""
-                    downloads.start(appID: game.id, name: name, installDirectory: dir)
-                    advanceRecovery()
-                }
-                Button("Delete local copy", role: .destructive) {
-                    downloads.deleteLocalCopy(appID: game.id)
-                    advanceRecovery()
-                }
-                Button("Skip", role: .cancel) {
-                    advanceRecovery()
-                }
-            } message: { game in
-                let size = ByteCountFormatter.string(fromByteCount: game.bytesOnDisk, countStyle: .file)
-                Text("“\(game.name)” (App \(game.id)) was interrupted. About \(size) is still on this device. Resume the download, or delete the local files?")
+                downloads.refreshLocalInventory()
             }
         }
-    }
-
-    private func presentRecoveryIfNeeded() {
-        let unfinished = downloads.unfinishedDownloads()
-        guard !unfinished.isEmpty else { return }
-        recoveryQueue = unfinished
-        recoveryCurrent = recoveryQueue.first
-        showRecovery = recoveryCurrent != nil
-    }
-
-    private func advanceRecovery() {
-        if !recoveryQueue.isEmpty {
-            recoveryQueue.removeFirst()
-        }
-        recoveryCurrent = recoveryQueue.first
-        showRecovery = recoveryCurrent != nil
     }
 }
 
@@ -108,6 +66,10 @@ struct GameRowView: View {
 
     private var installed: Bool {
         downloads.isInstalled(appID: game.id)
+    }
+
+    private var partial: Bool {
+        downloads.hasPartialDownload(appID: game.id)
     }
 
     var body: some View {
@@ -127,70 +89,120 @@ struct GameRowView: View {
                 .foregroundStyle(.secondary)
             }
 
-            if installed {
+            statusBlock
+            actionRow
+        }
+        .padding(.vertical, 4)
+    }
+
+    @ViewBuilder
+    private var statusBlock: some View {
+        if let job {
+            switch job.state {
+            case .queued, .running:
+                ProgressView(value: job.progress.fraction) {
+                    Text(statusText(for: job))
+                        .font(.caption)
+                }
+                if job.progress.bytesPerSecond > 0 {
+                    Text(speedText(job.progress.bytesPerSecond))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            case .finished:
                 Label("Installed (Madeira-compatible layout)", systemImage: "checkmark.circle.fill")
                     .font(.caption)
                     .foregroundStyle(.green)
+            case .failed:
+                Text(job.errorMessage ?? "Download failed")
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            case .cancelled:
+                Text("Cancelled")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            case .paused:
+                Text("Paused")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
+        } else if installed {
+            Label("Installed (Madeira-compatible layout)", systemImage: "checkmark.circle.fill")
+                .font(.caption)
+                .foregroundStyle(.green)
+            if partial {
+                Text("Leftover incomplete download data is still on disk.")
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+            }
+        } else if partial {
+            Label("Incomplete download on device", systemImage: "exclamationmark.triangle.fill")
+                .font(.caption)
+                .foregroundStyle(.orange)
+        }
+    }
 
-            if let job {
-                switch job.state {
-                case .queued, .running:
-                    ProgressView(value: job.progress.fraction) {
-                        Text(statusText(for: job))
-                            .font(.caption)
-                    }
-                    if job.progress.bytesPerSecond > 0 {
-                        Text(speedText(job.progress.bytesPerSecond))
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                    Button("Cancel", role: .destructive) {
-                        downloads.cancel(appID: game.id)
-                    }
-                    .font(.caption)
-                case .finished:
-                    Label("Download finished", systemImage: "checkmark.circle")
-                        .font(.caption)
-                        .foregroundStyle(.green)
-                case .failed:
-                    Text(job.errorMessage ?? "Download failed")
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                    Button("Try again") {
-                        downloads.start(
-                            appID: game.id,
-                            name: game.name,
-                            installDirectory: game.installDirectory
-                        )
-                    }
-                    .font(.caption)
-                case .cancelled, .paused:
-                    Text(job.state == .paused ? "Paused" : "Cancelled")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button(downloads.hasPartialDownload(appID: game.id) ? "Resume" : "Install") {
-                        downloads.start(
-                            appID: game.id,
-                            name: game.name,
-                            installDirectory: game.installDirectory
-                        )
-                    }
-                    .font(.caption)
-                }
-            } else if !installed {
-                Button(downloads.hasPartialDownload(appID: game.id) ? "Resume download" : "Install") {
+    @ViewBuilder
+    private var actionRow: some View {
+        if let job, job.state == .queued || job.state == .running {
+            Button("Cancel", role: .destructive) {
+                downloads.cancel(appID: game.id)
+            }
+            .font(.caption)
+        } else if let job, job.state == .failed {
+            HStack(spacing: 12) {
+                Button("Try again") {
                     downloads.start(
                         appID: game.id,
                         name: game.name,
                         installDirectory: game.installDirectory
                     )
                 }
+                .font(.caption)
                 .buttonStyle(.borderedProminent)
+
+                if partial || installed {
+                    Button("Delete local copy", role: .destructive) {
+                        downloads.deleteLocalCopy(appID: game.id)
+                    }
+                    .font(.caption)
+                }
+            }
+        } else if installed && !partial {
+            // Fully installed — only allow delete, not another Install
+            Button("Delete local copy", role: .destructive) {
+                downloads.deleteLocalCopy(appID: game.id)
+            }
+            .font(.caption)
+        } else if partial {
+            // Incomplete (with or without a finished-looking manifest leftover)
+            HStack(spacing: 12) {
+                Button("Continue download") {
+                    downloads.start(
+                        appID: game.id,
+                        name: game.name,
+                        installDirectory: game.installDirectory
+                    )
+                }
+                .font(.caption)
+                .buttonStyle(.borderedProminent)
+
+                Button("Delete local copy", role: .destructive) {
+                    downloads.deleteLocalCopy(appID: game.id)
+                }
                 .font(.caption)
             }
+        } else if !installed {
+            Button("Install") {
+                downloads.start(
+                    appID: game.id,
+                    name: game.name,
+                    installDirectory: game.installDirectory
+                )
+            }
+            .buttonStyle(.borderedProminent)
+            .font(.caption)
         }
-        .padding(.vertical, 4)
     }
 
     private func statusText(for job: SteamDownloadService.Job) -> String {
