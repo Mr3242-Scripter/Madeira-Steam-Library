@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
         B00000000000000000000001 /* MadeiraSteamLibraryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000001; };
         B00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000002; };
+        B00000000000000000000040 /* LibraryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000040; };
+        B00000000000000000000041 /* SettingsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000041; };
+        B00000000000000000000042 /* BackgroundControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000042; };
         B00000000000000000000003 /* MadeiraConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000003; };
         B00000000000000000000004 /* SteamSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000004; };
         B00000000000000000000005 /* SteamAuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00000000000000000000005; };
@@ -46,6 +49,9 @@
 /* Begin PBXFileReference section */
         F00000000000000000000001 /* MadeiraSteamLibraryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MadeiraSteamLibraryApp.swift; sourceTree = "<group>"; };
         F00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+        F00000000000000000000040 /* LibraryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViews.swift; sourceTree = "<group>"; };
+        F00000000000000000000041 /* SettingsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViews.swift; sourceTree = "<group>"; };
+        F00000000000000000000042 /* BackgroundControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundControllers.swift; sourceTree = "<group>"; };
         F00000000000000000000003 /* MadeiraConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MadeiraConfig.swift; sourceTree = "<group>"; };
         F00000000000000000000004 /* SteamSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamSignIn.swift; sourceTree = "<group>"; };
         F00000000000000000000005 /* SteamAuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SteamAuthAPI.swift; sourceTree = "<group>"; };
@@ -114,6 +120,9 @@
             children = (
                 F00000000000000000000001,
                 F00000000000000000000002,
+                F00000000000000000000040,
+                F00000000000000000000041,
+                F00000000000000000000042,
                 F00000000000000000000003,
                 G00000000000000000000004,
                 G00000000000000000000009,
@@ -315,6 +324,9 @@
             files = (
                 B00000000000000000000001,
                 B00000000000000000000002,
+                B00000000000000000000040,
+                B00000000000000000000041,
+                B00000000000000000000042,
                 B00000000000000000000003,
                 B00000000000000000000004,
                 B00000000000000000000005,
