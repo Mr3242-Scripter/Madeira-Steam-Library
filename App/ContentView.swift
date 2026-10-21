@@ -22,6 +22,7 @@ struct ContentView: View {
 
 private struct LibraryView: View {
     @StateObject private var library = SteamOwnedGamesService.shared
+    @StateObject private var downloads = SteamDownloadService.shared
 
     var body: some View {
         NavigationStack {
@@ -43,29 +44,7 @@ private struct LibraryView: View {
                     )
                 } else {
                     List(library.games) { game in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(game.name)
-                                .font(.headline)
-
-                            Text("App ID: \(game.id)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-
-                            if game.estimatedDownloadBytes > 0 {
-                                Text(
-                                    "Approx. download: \(ByteCountFormatter.string(fromByteCount: Int64(clamping: game.estimatedDownloadBytes), countStyle: .file))"
-                                )
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            }
-
-                            Text(
-                                "Madeira-compatible download integration is still in progress."
-                            )
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        }
-                        .padding(.vertical, 4)
+                        GameRowView(game: game, downloads: downloads)
                     }
                 }
             }
@@ -92,6 +71,116 @@ private struct LibraryView: View {
                 }
             }
         }
+    }
+}
+
+private struct GameRowView: View {
+    let game: SteamOwnedGameSummary
+    @ObservedObject var downloads: SteamDownloadService
+
+    private var job: SteamDownloadService.Job? {
+        downloads.job(for: game.id)
+    }
+
+    private var installed: Bool {
+        downloads.isInstalled(appID: game.id)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(game.name)
+                .font(.headline)
+
+            Text("App ID: \(game.id)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            if game.estimatedDownloadBytes > 0 {
+                Text(
+                    "Approx. download: \(ByteCountFormatter.string(fromByteCount: Int64(clamping: game.estimatedDownloadBytes), countStyle: .file))"
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            if installed {
+                Label("Installed (Madeira-compatible layout)", systemImage: "checkmark.circle.fill")
+                    .font(.caption)
+                    .foregroundStyle(.green)
+            }
+
+            if let job {
+                switch job.state {
+                case .queued, .running:
+                    ProgressView(value: job.progress.fraction) {
+                        Text(statusText(for: job))
+                            .font(.caption)
+                    }
+                    if job.progress.bytesPerSecond > 0 {
+                        Text(speedText(job.progress.bytesPerSecond))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    Button("Cancel", role: .destructive) {
+                        downloads.cancel(appID: game.id)
+                    }
+                    .font(.caption)
+                case .finished:
+                    Label("Download finished", systemImage: "checkmark.circle")
+                        .font(.caption)
+                        .foregroundStyle(.green)
+                case .failed:
+                    Text(job.errorMessage ?? "Download failed")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                    Button("Try again") {
+                        downloads.start(
+                            appID: game.id,
+                            name: game.name,
+                            installDirectory: game.installDirectory
+                        )
+                    }
+                    .font(.caption)
+                case .cancelled, .paused:
+                    Text(job.state == .paused ? "Paused" : "Cancelled")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button(downloads.hasPartialDownload(appID: game.id) ? "Resume" : "Install") {
+                        downloads.start(
+                            appID: game.id,
+                            name: game.name,
+                            installDirectory: game.installDirectory
+                        )
+                    }
+                    .font(.caption)
+                }
+            } else if !installed {
+                Button(downloads.hasPartialDownload(appID: game.id) ? "Resume download" : "Install") {
+                    downloads.start(
+                        appID: game.id,
+                        name: game.name,
+                        installDirectory: game.installDirectory
+                    )
+                }
+                .buttonStyle(.borderedProminent)
+                .font(.caption)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func statusText(for job: SteamDownloadService.Job) -> String {
+        let pct = Int(job.progress.fraction * 100)
+        switch job.progress.phase {
+        case .preparing: return "Preparing…"
+        case .downloading: return "Downloading \(pct)%"
+        case .finishing: return "Finishing…"
+        }
+    }
+
+    private func speedText(_ bps: Double) -> String {
+        let s = ByteCountFormatter.string(fromByteCount: Int64(bps), countStyle: .file)
+        return "\(s)/s"
     }
 }
 
@@ -263,7 +352,7 @@ private struct SteamSettingsView: View {
                     )
 
                     Text(
-                        "Downloads are not enabled until the Madeira-compatible installer is integrated."
+                        "Downloads use Steam ownership checks (depot keys). Install records use Madeira-compatible appmanifest format under Documents/steamapps."
                     )
                     .font(.footnote)
                     .foregroundStyle(.secondary)
